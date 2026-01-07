@@ -55,6 +55,7 @@ public class ImmersivePortals {
     private static final Map<ResourceLocation, PortalOffets> THEME_OFFSETS = new HashMap<>();
     public static RegistrySupplier<EntityType<BotiPortalEntity>> BOTI_PORTAL = null;
     public static Logger LOGGER = LogManager.getLogger("TardisRefined/ImmersivePortals");
+    private static boolean portalsInitialized = false;
 
     public static void clearPortalCache() {
         EXISTING_PORTALS.clear();
@@ -93,8 +94,13 @@ public class ImmersivePortals {
         BOTI_PORTAL = ENTITY_TYPES.register("boti_portal", () -> registerStatic(BotiPortalEntity::new, MobCategory.MISC, 1, 1, 96, 20, "boti_portal"));
 
         setupEvents();
+    }
 
-        // Set up for Portals!
+    public static void initAfterRegistries() {
+        if (!ModCompatChecker.immersivePortals() || portalsInitialized) {
+            return;
+        }
+        portalsInitialized = true;
         setupPortalsForShellThemes();
     }
 

@@ -20,6 +20,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import whocraft.tardis_refined.TardisRefined;
 import whocraft.tardis_refined.client.*;
+import whocraft.tardis_refined.compat.ModCompatChecker;
+import whocraft.tardis_refined.compat.portals.BotiPortalRenderer;
+import whocraft.tardis_refined.compat.portals.ImmersivePortals;
 import whocraft.tardis_refined.client.forge.ModelRegistryImpl;
 import whocraft.tardis_refined.client.model.pallidium.ModelLayerManager;
 import whocraft.tardis_refined.client.particle.ParticleGallifrey;
@@ -118,6 +121,9 @@ public class ClientModBus {
         BlockEntityRenderers.register(TRBlockEntityRegistry.ARTRON_PILLAR.get(), ArtronPillarRenderer::new);
 
         EntityRenderers.register(TREntityRegistry.CONTROL_ENTITY.get(), ControlEntityRenderer::new);
+        if (ModCompatChecker.immersivePortals() && ImmersivePortals.BOTI_PORTAL != null) {
+            EntityRenderers.register(ImmersivePortals.BOTI_PORTAL.get(), BotiPortalRenderer::new);
+        }
 
         ItemProperties.register(TRItemRegistry.TEST_TUBE.get(), new ResourceLocation(TardisRefined.MODID, "is_sampled"), (itemStack, clientLevel, livingEntity, i) -> DimensionSamplerItem.hasDimAtAll(itemStack) ? 1 : 0);
 

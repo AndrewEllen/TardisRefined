@@ -5,6 +5,9 @@ import whocraft.tardis_refined.common.util.Platform;
 public class ModCompatChecker {
 
     public static boolean immersivePortals() {
+        if (Platform.isModLoaded("immersive_portals") || Platform.isModLoaded("imm_ptl_core")) {
+            return true;
+        }
         try {
             Class.forName("qouteall.q_misc_util.MiscHelper");
             return true;
