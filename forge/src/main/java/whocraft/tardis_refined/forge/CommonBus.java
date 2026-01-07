@@ -13,6 +13,7 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import whocraft.tardis_refined.TRConfig;
 import whocraft.tardis_refined.TardisRefined;
 import whocraft.tardis_refined.command.TardisRefinedCommand;
 import whocraft.tardis_refined.common.capability.player.TardisPlayerInfo;
@@ -24,6 +25,7 @@ import whocraft.tardis_refined.common.util.MiscHelper;
 import whocraft.tardis_refined.common.util.TardisHelper;
 import whocraft.tardis_refined.compat.ModCompatChecker;
 import whocraft.tardis_refined.compat.create.CreateIntergrationsForge;
+import whocraft.tardis_refined.compat.portals.neoforge.PortalsCompatForge;
 import whocraft.tardis_refined.patterns.ConsolePatterns;
 import whocraft.tardis_refined.patterns.ShellPatterns;
 
@@ -99,25 +101,38 @@ public class CommonBus {
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            if (serverPlayer != null)
+            if (serverPlayer != null) {
                 TardisHelper.handlePlayerJoinWorldEvents(serverPlayer);
+                syncImmersivePortals(serverPlayer);
+            }
         }
     }
 
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            if (serverPlayer != null)
+            if (serverPlayer != null) {
                 TardisHelper.handlePlayerJoinWorldEvents(serverPlayer);
+                syncImmersivePortals(serverPlayer);
+            }
         }
     }
 
     @SubscribeEvent
     public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            if (serverPlayer != null)
+            if (serverPlayer != null) {
                 TardisHelper.handlePlayerJoinWorldEvents(serverPlayer);
+                syncImmersivePortals(serverPlayer);
+            }
         }
+    }
+
+    private static void syncImmersivePortals(ServerPlayer serverPlayer) {
+        if (!ModCompatChecker.immersivePortals() || !TRConfig.COMMON.COMPATIBILITY_IP.get()) {
+            return;
+        }
+        PortalsCompatForge.syncDimensionIds(serverPlayer);
     }
 
 }
